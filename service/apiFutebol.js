@@ -1,11 +1,13 @@
 import React from "react";
 import axios from "axios";
 
-const liveKey = "live_afa0c0fb4b7cd1d0e4c780715a87a7";
-const testKey = "test_50999e08a946c61bd39229e4e86318";
+const liveKey = "live_ea17f8460df3d0ad0c5ac8ba1f0cea";
+const testKey = "test_fc5f2e831171aebc8732003edc4f9f";
 
-export default function requestApi(url, test = false) {
+export default function requestApi(url, setState, forGames, test = false) {
     const key = test ? testKey : liveKey;
+
+    console.log("Url:", url);
 
     axios
         .get(url, {
@@ -14,10 +16,15 @@ export default function requestApi(url, test = false) {
             },
         })
         .then((response) => {
-            console.log(response.data);
-            return response.data;
+            console.log(response.data.chaves);
+
+            if (forGames) {
+                setState(response.data.chaves);
+            } else {
+                setState(response.data);
+            }
         })
         .catch((err) => {
-            return err;
+            console.log(err);
         });
 }

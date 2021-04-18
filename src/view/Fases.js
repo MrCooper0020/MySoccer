@@ -1,16 +1,17 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { ListItem, Avatar } from "react-native-elements";
+import { View } from "react-native";
 import requestApi from "../../service/apiFutebol";
+import { ListItem, Avatar, Text } from "react-native-elements";
 
-export default function Home({ navigation }) {
-    const [list, setList] = useState([]);
+export default function Fases({ route, navigation }) {
+    const campeonato_id = route.params;
+    const [fases, setFases] = useState([]);
 
     useEffect(() => {
         requestApi(
-            "https://api.api-futebol.com.br/v1/campeonatos",
-            setList,
+            `https://api.api-futebol.com.br/v1/campeonatos/${campeonato_id}/fases`,
+            setFases,
             false
         );
     }, []);
@@ -19,20 +20,20 @@ export default function Home({ navigation }) {
         <View>
             <StatusBar style="auto" />
             <View>
-                {list.map((item, i) => (
+                {fases.map((item, i) => (
                     <ListItem
                         key={i}
                         bottomDivider
                         onPress={() =>
-                            navigation.navigate("Fases", item.campeonato_id)
+                            navigation.navigate("Games", {
+                                faseId: item.fase_id,
+                                campeonatoId: campeonato_id,
+                            })
                         }
                     >
-                        <Avatar source={{ uri: item.logo }} />
                         <ListItem.Content>
                             <ListItem.Title>{item.nome}</ListItem.Title>
-                            <ListItem.Subtitle>
-                                Status: {item.status}
-                            </ListItem.Subtitle>
+                            <ListItem.Subtitle></ListItem.Subtitle>
                         </ListItem.Content>
                         <ListItem.Chevron />
                     </ListItem>
